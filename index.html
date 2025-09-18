@@ -1,229 +1,337 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tugas Pemrograman Web</title>
-    <style>
-      /* Reset default margin & padding */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Form Pendaftaran ke Website Saya</title>
+  <style>
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical; /* atau none, horizontal */
+    }
+
+    /* Reset ringan */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root{
+      --bg: #25358a;
+      --card: #ffffff;
+      --accent: #2563eb; /* biru */
+      --accent-600: #1e40af;
+      --muted: #6b7280;
+      --success: #10b981;
+      --radius: 12px;
+      --shadow: 0 8px 24px rgba(18, 38, 63, 0.08);
+      --glass: rgba(255,255,255,0.6);
+    }
+
+    body{
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+
+    .card{
+      width: 100%;
+      max-width: 740px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+    .card:hover{ transform: translateY(-6px); box-shadow: 0 18px 40px rgba(18,38,63,0.12); }
+
+    h1{
+      font-size: 20px;
+      margin-bottom: 6px;
+    }
+    p.lead{
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    form {
+      display: grid;
+      gap: 16px;
+    }
+
+    .row {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    label{
+      display: block;
+      font-size: 13px;
+      margin-bottom: 8px;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    .input, .select, .password {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #e6edf8;
+      background: linear-gradient(180deg, #ffffff, #fbfdff);
+      outline: none;
+      font-size: 14px;
+      transition: box-shadow 140ms ease, border-color 140ms ease, transform 80ms ease;
+    }
+    .input::placeholder { color: #94a3b8; font-weight: 500; }
+    .input:focus, .select:focus, .password:focus {
+      box-shadow: 0 6px 18px rgba(37,99,235,0.12);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* Select styling */
+    .select{
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+                        linear-gradient(135deg, var(--muted) 50%, transparent 50%),
+                        linear-gradient(to right, #fff, #fff);
+      background-position: calc(100% - 18px) calc(1em + 2px), calc(100% - 13px) calc(1em + 2px), 100% 0;
+      background-size: 6px 6px, 6px 6px, 2.5em 2.5em;
+      background-repeat: no-repeat;
+      padding-right: 36px;
+    }
+
+    /* Fieldset for grouped controls */
+    fieldset{
+      border: 1px solid #eef3fb;
+      padding: 12px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, rgba(245,247,255,0.6), rgba(250,251,255,0.6));
+    }
+    legend{
+      padding: 0 8px;
+      font-size: 13px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    /* Radio & checkbox custom */
+    .option-list {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .option {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      font-size: 14px;
+      color: #0f172a;
+    }
+    .option input[type="radio"],
+    .option input[type="checkbox"]{
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      border: 1.5px solid #d6e3fb;
+      display: inline-grid;
+      place-items: center;
+      transition: background 140ms ease, border-color 140ms ease;
+      background: #fff;
+    }
+    /* radio specific */
+    .option input[type="radio"] { border-radius: 50%; }
+    .option input[type="radio"]::after,
+    .option input[type="checkbox"]::after {
+      content: "";
+      width: 10px;
+      height: 10px;
+      transform: scale(0);
+      transition: transform 120ms ease;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+    /* checkbox inner tick - make square */
+    .option input[type="checkbox"]::after { border-radius: 3px; }
+
+    .option input[type="radio"]:checked,
+    .option input[type="checkbox"]:checked {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(37,99,235,0.06));
+    }
+    .option input[type="radio"]:checked::after,
+    .option input[type="checkbox"]:checked::after {
+      transform: scale(1);
+    }
+
+    /* Helper text */
+    .hint { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+    /* Submit */
+    .actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+    .btn {
+      padding: 10px 16px;
+      border-radius: 10px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 100ms ease, box-shadow 100ms ease, opacity 120ms ease;
+    }
+    .btn-primary {
+      background: linear-gradient(180deg,var(--accent),var(--accent-600));
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(37,99,235,0.18);
+    }
+    .btn-primary:hover { transform: translateY(-3px); }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #e6eefc;
+      color: var(--muted);
+    }
+
+    /* small screens */
+    @media (max-width:600px){
+      .row { grid-template-columns: 1fr; }
+      .actions { justify-content: stretch; flex-direction: column-reverse; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <main class="card" role="main" aria-labelledby="form-title">
+    <h1 id="form-title">Form Pendaftaran</h1>
+
+    <form id="simple-form" action="#" method="post" novalidate>
+      <!-- Nama & Kata Sandi -->
+      <div class="row">
+        <div>
+          <label for="name">Nama lengkap</label>
+          <input id="name" name="name" class="input" type="text" placeholder="Masukkan nama Anda" required />
+          <div class="hint">Contoh: Muhammad Fakhry Adrian Daulay</div>
+        </div>
+
+        <div>
+          <label for="password">Kata sandi</label>
+          <input id="password" name="password" class="password" type="password" placeholder="Minimal 8 karakter" minlength="8" required />
+          <div class="hint">Gunakan kombinasi huruf dan angka yang kuat!</div>
+        </div>
+      </div>
+
+      <!-- Select Country -->
+      <div>
+        <label for="country">Dari fakultas mana aja nihh?</label>
+        <select id="country" name="country" class="select" required>
+          <option value="">Pilih fakultas</option>
+          <option value="id">Fakultas Kedokteran</option>
+          <option value="my">Fakultas Hukum</option>
+          <option value="sg">Fakultas Pertanian</option>
+          <option value="th">Fakultas Teknik</option>
+          <option value="other">Fakultas Ekonomi dan Bisnis</option>
+          <option value="">Fakultas Kedokteran Gigi</option>
+          <option value="">Fakultas Ilmu Budaya</option>
+          <option value="">Fakultas Matematika dan Ilmu Pengetahuan Alam</option>
+          <option value="">Fakultas Ilmu Sosial dan Ilmu Politik</option>
+          <option value="">Fakultas Kesehatan Masyarakat</option>
+          <option value="">Fakultas Psikologi</option>
+          <option value="">Fakultas Farmasi</option>
+          <option value="">Fakultas Keperawatan</option>
+          <option value="">Fakultas Ilmu Komputer dan Teknologi Informasi</option>
+          <option value="">Fakultas Kehutanan</option>
+          <option value="">Fakultas Vokasi</option>
+          <option value="">Sekolah Pascasarjana</option>
+        </select>
+      </div>
+
+      <!-- Radio -->
+      <fieldset aria-labelledby="gender-legend">
+        <legend id="gender-legend">Jenis kelamin</legend>
+        <div class="option-list" role="radiogroup" aria-labelledby="gender-legend">
+          <label class="option" for="male">
+            <input id="male" name="gender" type="radio" value="male" required />
+            <span>Pria</span>
+          </label>
+
+          <label class="option" for="female">
+            <input id="female" name="gender" type="radio" value="female" />
+            <span>Wanita</span>
+          </label>
+        </div>
+      </fieldset>
+
+      <!-- Checkbox -->
+      <fieldset aria-labelledby="subscribe-legend">
+        <legend id="subscribe-legend">Tujuan mengunjungi web saya</legend>
+        <div class="option-list">
+          <label class="option" for="newsletter">
+            <input id="newsletter" name="newsletter" type="checkbox" value="newsletter" />
+            <span>Ingin kenalan hehehe</span>
+          </label>
+
+          <label class="option" for="terms">
+            <input id="terms" name="terms" type="checkbox" value="agree" required />
+            <span>Ingin melihat informasi tentang saya</span>
+          </label>
+        </div>
+      </fieldset>
+
+        <h2>First Impression Mengenai Saya:</h2>
+  <form action="/proses_komentar" method="post">
+    <textarea name="komentar" placeholder="Tulis di sini yaa..."></textarea>
+    <br><br>
+  </form>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button type="button" class="btn btn-ghost" onclick="document.getElementById('simple-form').reset();">Reset</button>
+        <a href="index.html" class="btn btn-primary">Daftar</a>
+      </div>
+    </form>
+  </main>
+
+  <script>
+    // Contoh validasi sederhana saat submit
+    document.getElementById('simple-form').addEventListener('submit', function(e){
+      e.preventDefault();
+      // cek validity native HTML5
+      if (!this.checkValidity()){
+        // trigger UI validasi browser
+        this.reportValidity();
+        return;
       }
 
-      body {
-        font-family: Arial, sans-serif;
-        background-color: #f9f9f9;
-      }
+      // Ambil data sederhana (contoh)
+      const data = new FormData(this);
+      const obj = Object.fromEntries(data.entries());
+      // Untuk checkbox yang tidak tercentang, nilai mungkin tidak ada; tangani beberapa nilai jika perlu
+      if(!obj.newsletter) obj.newsletter = 'no';
+      if(!obj.gender) obj.gender = 'not-specified';
 
-      /* Header */
-      header {
-        background-color: #333;
-        width: 100%;
-        height: 200px;
-        text-align: center;
-        overflow: hidden;
-        position: relative;
-      }
-
-      header img {
-        height: 100%; /* Ganti sesuai ukuran logo */
-        width: 100%;
-        object-fit: cover;
-        object-position: center;
-      }
-
-      /* Navigation Menu */
-      nav {
-        background-color: #25358a;
-        overflow: hidden;
-      }
-
-      nav a {
-        float: left;
-        display: block;
-        color: #fff;
-        text-align: center;
-        padding: 14px 20px;
-        text-decoration: none;
-      }
-
-      nav a:hover {
-        background-color: #666;
-      }
-
-      /* Layout */
-      .container {
-        display: flex;
-        flex-wrap: wrap;
-        padding: 20px;
-      }
-
-      /* Sidebar */
-      aside {
-        flex: 1;
-        min-width: 200px;
-        background-color: #00ffff;
-        padding: 15px;
-      }
-
-      /* Main Content */
-      main {
-        flex: 3;
-        min-width: 300px;
-        background-color: #fff;
-        padding: 15px;
-        margin-left: 20px;
-      }
-
-      /* Footer */
-      footer {
-        background-color: #25358a;
-        color: white;
-        text-align: center;
-        padding: 15px;
-        margin-top: 20px;
-      }
-
-      /* Responsive */
-      @media (max-width: 768px) {
-        .container {
-          flex-direction: column;
-        }
-
-        main {
-          margin-left: 0;
-          margin-top: 20px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Header -->
-    <header>
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/8/87/LH_95.jpg"
-        width="100%"
-        alt="Logo Website"
-      />
-    </header>
-
-    <!-- Navigation Menu -->
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="profile.html">Profile</a>
-      <a href="contact.html">Contact</a>
-      <a href="for-more.html">For more</a>
-    </nav>
-
-    <!-- Main Content Area -->
-    <div class="container">
-      <!-- Sidebar -->
-      <aside>
-        <h3>Advertisement</h3>
-        <p>
-          Mau minuman yang nyegerin?
-
-          <a href="https://hydrococo.com/" class="custom-link" target="_blank"
-            >Klik disini!</a
-          >
-        </p>
-      </aside>
-
-      <!-- Main Content -->
-      <main>
-        <h2>Selamat Datang di Website Saya</h2>
-        <p>
-          Okay, my name is Muhammad Fakhry Adrian Daulay, I was born in Medan at
-          March 9th 2007. I'm a proud USU studs, who's mastering on Information
-          Technology study program.
-        </p>
-      </main>
-    </div>
-    <!-- Heading -->
-    <h2>Biodata Saya</h2>
-    <p>
-      Hello All! Perkenalkan saya Fakhry. Agar dapat lebih mengenal saya, mari
-      cek website saya!
-    </p>
-    <table border="4">
-      <!-- Membuat Tabel Pertama -->
-      <tr>
-        <th colspan="2">
-          <img src="https://i.ibb.co.com/4nQ6qCJB/foto-nametag.jpg7" width="200" />
-        </th>
-      </tr>
-      <!-- Membuat Tabel Kedua -->
-      <tr>
-        <th>Haloo Semua!</th>
-        <th>Halo Gaess</th>
-      </tr>
-    </table>
-    <p>
-      Okay, my name is Muhammad Fakhry Adrian Daulay, I was born in Medan at
-      March 9th 2007. I'm a proud USU studs, who's mastering on Information
-      Technology study program. Let's connected!
-    </p>
-    <title>Clickable Logo</title>
-    <style>
-      .logo {
-        width: 60px; /* Ubah sesuai ukuran logo yang diinginkan */
-        height: auto;
-        cursor: pointer;
-      }
-    </style>
-    <!-- Instagram -->
-    <a
-      href="https://www.instagram.com/f.akhry?igsh=MW5rZXVra2pqdWl5Nw=="
-      target="_blank"
-    >
-      <img src="https://img.freepik.com/premium-vector/instagram-vector-logo-icon-social-media-logotype_901408-392.jpg?semt=ais_hybrid&w=740&q=80" alt="Logo" class="logo" />
-    </a>
-
-    <style>
-      .logo {
-        width: 60px; /* Ubah sesuai ukuran logo yang diinginkan */
-        height: auto;
-        cursor: pointer;
-      }
-    </style>
-    <!-- Tiktok -->
-    <a
-      href="https://www.tiktok.com/@fxxxxy.axxxxn?_t=ZS-8zOS02KeMOi&_r=1"
-      target="_blank"
-    >
-      <img
-        src="https://images.seeklogo.com/logo-png/37/1/tiktok-share-icon-black-logo-png_seeklogo-373029.png"
-        alt="Logo"
-        class="logo"
-      />
-    </a>
-
-    <style>
-      .logo {
-        width: 60px; /* Ubah sesuai ukuran logo yang diinginkan */
-        height: auto;
-        cursor: pointer;
-      }
-    </style>
-    <!-- USU -->
-    <a href="https://fasilkom-ti.usu.ac.id/id" target="_blank">
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Logo_of_North_Sumatra_University.svg/400px-Logo_of_North_Sumatra_University.svg.png"
-        alt="Logo"
-        class="logo"
-      />
-    </a>
-
-    <!-- Footer -->
-    <footer>
-      &copy; 2025 Muhammad Fakhry Adrian Daulay. All rights reserved.
-    </footer>
-  </body>
+      // Demo: tampilkan ringkasan (alert). Dalam aplikasi nyata, kirim ke server via fetch/ajax.
+      alert('Form berhasil disubmit (demo).\\nData: ' + JSON.stringify(obj, null, 2));
+      this.reset();
+    });
+  </script>
+</body>
 </html>
-
-
-
-
-
